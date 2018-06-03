@@ -1,0 +1,42 @@
+﻿@model Shootr.Models.Propuesta
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Postulaciones para @Html.DisplayFor(model => model.Nombre)</h2>
+
+
+<table class="table">
+    <tr>
+        <th>
+            Usuario
+        </th>
+        <th>
+            Total trabajos
+        </th>
+        <th>
+            Puntuacion promedio
+        </th>
+        <th />
+    </tr>
+
+@foreach (var item in Model.Postulaciones) {
+    <tr>
+        <td>
+            @Html.ActionLink("" + @Html.DisplayFor(modelItem => item.Usuario.UserName), "Details", "Usuario", new { username = item.Usuario.UserName }, new { @class = "btn btn-success" })
+        </td>
+        <td>
+            TODO
+        </td>
+        <td>
+            TODO
+        </td>
+        <td>
+            
+            @Html.ActionLink("Aceptar", "AceptarPostulacion", "Propuestas", new { id = Model.Id }, new { @class = "btn btn-success" })
+        </td>
+    </tr>
+}
+
+</table>

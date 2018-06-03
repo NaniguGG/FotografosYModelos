@@ -1,0 +1,140 @@
+﻿@model Shootr.Models.Usuario
+
+@{
+    ViewBag.Title = "Usuario";
+}
+
+<h2> @Html.DisplayFor(model => model.UserName)</h2>
+
+
+
+<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+
+    <div class="col-md-12 text-center">
+        <img class="img-responsive img-center" src="@Url.Content("~/ProfilePictures/" + Model.URLFotoPerfil + ".jpg")" alt="Image" />
+    </div>
+    <h4>MyUserInfo</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Nombre)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Nombre)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Apellido)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Apellido)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Telefono)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Telefono)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Descripcion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Descripcion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Facebook)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Facebook)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Instagram)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Instagram)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Website)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Website)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.URLFotoPerfil)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.URLFotoPerfil)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Rol)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Rol)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UserName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UserName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
+
+@Html.ActionLink("Agregar foto a porfolio", "AgregarFoto", "Usuario")
+
+<div class="col-md-8 col-sm-4">
+    @if (Model.Fotos != null)
+    {
+        List<Shootr.Models.FotoPorfolio> list = Model.Fotos.ToList();
+        foreach (var foto in list.Select((x, i) => new { fotourl = x, Index = i }))
+        {
+
+            if (foto.Index % 3 == 0)
+            {
+                @Html.Raw(@"<div class=""row"">")
+            }
+
+            <img class="img-responsive" src="@Url.Content("~/PorfoliosPictures/" + foto.fotourl.Url + ".jpg")" alt="Image" width="350" height="450" />
+
+        }
+
+    }
+
+
+
+
+
+</div>
+
+
