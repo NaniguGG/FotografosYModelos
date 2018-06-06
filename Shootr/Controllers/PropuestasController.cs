@@ -138,11 +138,70 @@ namespace Shootr.Controllers
                 return View("Index");
             }
             return View("Index");
-
         }
 
-       
 
+        public ActionResult Calificar(int? id)
+        {
+            if (id != null)
+            {
+                Propuesta propuesta = db.Propuestas.Find(id);
+                Usuario usuario = ObtenerUsuarioActual(User);
+                if (propuesta.Creador.Id == usuario.Id || propuesta.UsuarioGanador.Id == usuario.Id)
+                {
+                    Calificacion calificacion = new Calificacion();
+                    calificacion.Propuesta = propuesta;
+                    calificacion.PropuestaId = propuesta.Id;
+                    return View("Calificar", calificacion);
+                }
+
+                return View("Index");
+            }
+            return View("Index");
+        }
+
+
+
+        //[Route("Usuario/AgregarFoto")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Calificar(Calificacion modelo)
+        {
+            if (ModelState.IsValid)
+            {
+                Propuesta propuesta = db.Propuestas.Find(modelo.PropuestaId);
+                Usuario usuarioActual = ObtenerUsuarioActual(User);
+
+                //modelo.Propuesta = propuesta;
+                //modelo.PropuestaId = propuesta.Id;
+
+                db.Calificaciones.Add(modelo);
+                db.SaveChanges();
+
+
+                if (usuarioActual.Id == propuesta.Creador.Id)
+                {
+                    //soy el dueno
+                    propuesta.CalificacionCreador = modelo;
+                    propuesta.CalificacionCreadorId = modelo.Id;
+
+                }
+                else if (usuarioActual.Id == propuesta.UsuarioGanador.Id)
+                {
+                    //soy el ganador
+                    propuesta.CalificacionGanador = modelo;
+                    propuesta.CalificacionGanadorId = modelo.Id;
+                }
+
+                modelo.PropuestaId = propuesta.Id;
+
+                db.Entry(propuesta).State = EntityState.Modified;
+                db.SaveChanges();
+
+                return RedirectToAction("Index");
+            }
+            return RedirectToAction("Index");
+        }
 
         // GET: Propuestas/Edit/5
         public ActionResult Edit(int? id)

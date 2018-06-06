@@ -10,6 +10,7 @@ namespace Shootr.Models
     public class Calificacion
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         public int Puntuacion { get; set; }

@@ -24,6 +24,6 @@ namespace Shootr.DataContexts
         public DbSet<FotoPorfolio> FotosPorfolio { get; set; }
         public DbSet<Propuesta> Propuestas { get; set; }
         public DbSet<Postulacion> Postulaciones { get; set; }
-
+        public DbSet<Calificacion> Calificaciones { get; set; }
     }
 }

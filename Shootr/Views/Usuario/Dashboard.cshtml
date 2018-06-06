@@ -6,66 +6,130 @@
 
 <h2> @Html.DisplayFor(model => model.UserName)</h2>
 
+@{ var userName = System.Web.HttpContext.Current.User.Identity.Name; }
 
-<div class="container">
-    <div class="row">
+<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+    <h4>Propuestas abiertas</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col"># de postulantes</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
 
-            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                <h4>Propuestas abiertas</h4>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">Name</th>
-                            <th scope="col"># de postulantes</th>
-                            <th scope="col"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
+            @foreach (var item in Model.Propuestas.Where(x => x.Activa == true))
+            {
+                <tr>
+                    <td>@item.Nombre</td>
+                    <td>@item.Postulaciones.Count()</td>
+                    <td>@Html.ActionLink("Ver postulantes", "VerPostulaciones", "Propuestas", new { id = item.Id }, new { @class = "btn btn-success" })</td>
+                </tr>
 
-                        @foreach (var item in Model.Propuestas.Where(x => x.Activa == true))
-                        {
-                            <tr>
-                                <td>@item.Nombre</td>
-                                <td>@item.Postulaciones.Count()</td>
-                                <td>@Html.ActionLink("Ver postulantes", "VerPostulaciones", "Propuestas", new { id = item.Id }, new { @class = "btn btn-success" })</td>
-                            </tr>
-
-                        }
-            </div>
-        
-       
-
-            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                <h4>Propuestas Cerradas (completar)</h4>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">Name</th>
-                            <th scope="col"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                        @foreach (var item in Model.Propuestas.Where(x => x.CalificacionCreador == null || x.CalificacionGanador == null))
-                        {
-                            <tr>
-                                <td>@item.Nombre</td>
-                                <td>@Html.ActionLink("Ver postulantes", "VerPostulaciones", "Propuestas", new { id = item.Id }, new { @class = "btn btn-success" })</td>
-                            </tr>
-
-                        }
+            }
+        </tbody>
+    </table>
 </div>
 
-    
-        
-    </div>
-    <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            comentarios sin responder
-        </div>
-    </div>
 
 
+<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+    <h4>Propuestas Cerradas (completar)</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+
+
+
+            @foreach (var item in Model.Propuestas.Where(x => x.CalificacionCreador == null || x.CalificacionGanador == null))
+            {
+                <tr>
+                    <td>@item.Nombre</td>
+                    <td>
+                        
+                        @if (userName == item.Creador.UserName && item.CalificacionCreador == null)
+                        {
+                            @Html.ActionLink("Calificar", "Calificar", "Propuestas", new { id = item.Id }, new { @class = "btn btn-success" })
+                        }
+
+
+                    </td>
+                </tr>
+
+            }
+            @foreach (var item in Model.Postulaciones.Where(x => x.Propuesta.UsuarioGanador != null && x.Propuesta.UsuarioGanador.UserName == userName && x.Propuesta.CalificacionGanador == null))
+            {
+
+                <tr>
+                    <td>@item.Propuesta.Nombre</td>
+                    <td>
+                        
+                        @if (userName == item.Propuesta.UsuarioGanador.UserName && item.Propuesta.CalificacionGanador == null)
+                        {
+                            @Html.ActionLink("Calificar", "Calificar", "Propuestas", new { id = item.Propuesta.Id }, new { @class = "btn btn-success" })
+                        }
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
 </div>
 
-   
+
+<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+    <h4>Propuestas TERMINADAS (completar)</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Propuestas.Where(x => x.CalificacionCreador != null && x.CalificacionGanador != null))
+            {
+                <tr>
+                    <td>@item.Nombre</td>
+                    <td>
+                             review
+
+                    </td>
+                </tr>
+
+            }
+            @foreach (var item in Model.Postulaciones.Where(x => x.Propuesta.CalificacionGanador != null && x.Propuesta.UsuarioGanador.UserName == userName && x.Propuesta.CalificacionCreador != null))
+            {
+
+                <tr>
+                    <td>@item.Propuesta.Nombre</td>
+                    <td>
+                       review
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        comentarios sin responder
+    </div>
+</div>
+
+
+
+

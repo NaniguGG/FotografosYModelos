@@ -8,7 +8,7 @@
 <hr />
 <div>
     <div class="col-md-7 text-center">
-        <img class="img-responsive img-center" src="@Url.Content( "~/PropuestasPictures/"+ Model.URLFoto+".jpg" )" alt="Image" />
+        <img class="img-responsive img-center" src="@Url.Content("~/PropuestasPictures/" + Model.URLFoto + ".jpg")" alt="Image" />
     </div>
 
     <div class="col-md-5 text-center">
@@ -41,7 +41,29 @@
 
         </dl>
 
-            @Html.ActionLink("Postularse", "Postularse", "Propuestas", new { id = Model.Id }, new { @class = "btn btn-success" })
+        @*mi nombre*@
+        @{ var userName = System.Web.HttpContext.Current.User.Identity.Name; }
+
+
+        @*Si soy el creador*@
+        @{
+            if (userName == Model.Creador.UserName)
+            {
+                <button type="button" class="btn btn-secondary">Usted es el creador!</button>
+            }
+            else if (Model.Postulaciones.Where(x => x.Usuario.UserName == userName).Count() > 0)
+            {
+                <button type="button" class="btn btn-secondary">Usted ya se postulo!</button>
+            }
+            else
+            {
+                @Html.ActionLink("Postularse", "Postularse", "Propuestas", new { id = Model.Id }, new { @class = "btn btn-success" })
+            }
+        }
+
+
+
+
     </div>
 
 

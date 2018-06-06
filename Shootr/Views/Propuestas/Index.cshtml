@@ -32,32 +32,37 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.ActionLink("" + @Html.DisplayFor(modelItem => item.Creador.UserName), "Details", "Usuario", new { username = item.Creador.UserName }, new { @class = "btn btn-success" })
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Nombre)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Descripccion)
-        </td>
-        <td>
-            <img class="img-responsive img-center" src="@Url.Content("~/PropuestasPictures/" + item.URLFoto + ".jpg")" alt="Image" />
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Activa)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Lugar)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+
+        if (item.Activa == true)
+        {
+            <tr>
+                <td>
+                    @Html.ActionLink("" + @Html.DisplayFor(modelItem => item.Creador.UserName), "Details", "Usuario", new { username = item.Creador.UserName }, new { @class = "btn btn-success" })
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Descripccion)
+                </td>
+                <td>
+                    <img class="img-responsive img-center" src="@Url.Content("~/PropuestasPictures/" + item.URLFoto + ".jpg")" alt="Image" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Activa)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Lugar)
+                </td>
+                <td>
+                    @Html.ActionLink("Ver Detalles", "Details", new { id = item.Id }) |
+                </td>
+            </tr>
+
+        }
+
+    }
 
 </table>

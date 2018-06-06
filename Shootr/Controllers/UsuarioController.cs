@@ -150,7 +150,6 @@ namespace Shootr.Controllers
                 //copiar una por una las propiedades al usuario actual
                 usuarioActual.Apellido = userInfo.Apellido;
                 usuarioActual.Descripcion = userInfo.Descripcion;
-                usuarioActual.Email = userInfo.Descripcion;
                 usuarioActual.Facebook = userInfo.Facebook;
                 usuarioActual.Instagram = userInfo.Instagram;
                 usuarioActual.Nombre = userInfo.Nombre;
