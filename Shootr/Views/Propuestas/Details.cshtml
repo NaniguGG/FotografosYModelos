@@ -7,72 +7,156 @@
 <h2>@Html.DisplayFor(model => model.Nombre)</h2>
 <hr />
 <div>
-    <div class="col-md-7 text-center">
-        <img class="img-responsive img-center" src="@Url.Content("~/PropuestasPictures/" + Model.URLFoto + ".jpg")" alt="Image" />
+    <div class="row">
+        <div class="col-md-7 text-center">
+            <img class="img-responsive img-center" src="@Url.Content("~/PropuestasPictures/" + Model.URLFoto + ".jpg")" alt="Image" />
+        </div>
+
+        <div class="col-md-5 text-center">
+
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Creador.Nombre)
+                </dt>
+
+                <dd>
+                    @Html.ActionLink("" + @Html.DisplayFor(model => model.Creador.UserName), "Details", "Usuario", new { id = Model.Creador.UserName }, new { @class = "btn btn-success" })
+
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Lugar)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Lugar)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Descripccion)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Descripccion)
+                </dd>
+
+            </dl>
+
+            @*mi nombre*@
+            @{ var userName = System.Web.HttpContext.Current.User.Identity.Name; }
+
+
+            @*Si soy el creador*@
+            @{
+                if (userName == Model.Creador.UserName)
+                {
+                    <button type="button" class="btn btn-secondary">Usted es el creador!</button>
+                }
+                else if (Model.Postulaciones.Where(x => x.Usuario.UserName == userName).Count() > 0)
+                {
+                    <button type="button" class="btn btn-secondary">Usted ya se postulo!</button>
+                }
+                else
+                {
+                    @Html.ActionLink("Postularse", "Postularse", "Propuestas", new { id = Model.Id }, new { @class = "btn btn-success" })
+                }
+            }
+
+
+
+
+        </div>
     </div>
-
-    <div class="col-md-5 text-center">
-
-        <dl class="dl-horizontal">
-            <dt>
-                @Html.DisplayNameFor(model => model.Creador.Nombre)
-            </dt>
-
-            <dd>
-                @Html.ActionLink("" + @Html.DisplayFor(model => model.Creador.UserName), "Details", "Usuario", new { id = Model.Creador.UserName }, new { @class = "btn btn-success" })
-
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.Lugar)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Lugar)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.Descripccion)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Descripccion)
-            </dd>
-
-        </dl>
-
-        @*mi nombre*@
-        @{ var userName = System.Web.HttpContext.Current.User.Identity.Name; }
-
-
-        @*Si soy el creador*@
-        @{
-            if (userName == Model.Creador.UserName)
-            {
-                <button type="button" class="btn btn-secondary">Usted es el creador!</button>
-            }
-            else if (Model.Postulaciones.Where(x => x.Usuario.UserName == userName).Count() > 0)
-            {
-                <button type="button" class="btn btn-secondary">Usted ya se postulo!</button>
-            }
-            else
-            {
-                @Html.ActionLink("Postularse", "Postularse", "Propuestas", new { id = Model.Id }, new { @class = "btn btn-success" })
-            }
-        }
-
-
-
-
-    </div>
-
 
 
 </div>
+
 
 <div class="row">
- <hr />
+    <br />
 </div>
+
+@if (User.Identity.IsAuthenticated && User.Identity.Name != Model.Creador.UserName)
+{
+    <div class="row">
+        <div class="container-fluid col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            @using (Html.BeginForm("PostComment/" + @Model.Id, "Propuestas"))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="row">
+
+
+                    <div class="panel panel-primary">
+                        <!-- Default panel contents -->
+                        <div class="panel-heading">
+                            <b>Ask a question</b>
+                        </div>
+                        <div class="panel-body">
+                            @Html.TextArea("NewComment", null, 3, 999, htmlAttributes: new { @class = "form-control", @style = "width: 100%; max-width: 100%;" })
+                            <br />
+
+
+                            <input type="submit" value="Post" class="btn btn-info pull-right" />
+
+
+                        </div>
+
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+
+
+
+@foreach (var item in Model.Preguntas.OrderBy(x => x.Id))
+{
+    <div class="row">
+        <div class="container-fluid col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <b> @Html.DisplayFor(modelItem => item.Asker.UserName) - PONER LINK, QUIZAS UN MODAL</b>
+                </div>
+                <b>Question: </b>@Html.DisplayFor(modelItem => item.QuestionString)
+
+
+
+                @if (item.AnswerString != null)
+                {
+                    <div class="panel-body">
+                        <b>Answer: </b>@Html.DisplayFor(modelItem => item.AnswerString)
+                    </div>
+                }
+                else
+                {
+                    if (User.Identity.Name == Model.Creador.UserName)
+                    {
+                        <div class="panel-body">
+
+                            @using (Html.BeginForm("PostAnswer/" + item.Id, "Propuestas"))
+                            {
+                                @Html.AntiForgeryToken()
+
+                                @Html.TextArea("NewComment", null, 2, 999, htmlAttributes: new { @class = "form-control", @style = "width: 100%; max-width: 100%;" })
+
+                                <br />
+                                <input type="submit" value="Post" class="btn btn-info pull-right" />
+
+                            }
+                        </div>
+
+                    }
+                }
+            </div>
+        </div>
+    </div>
+ }
+
+
+
 
 
 

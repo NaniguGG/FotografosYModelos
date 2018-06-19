@@ -21,76 +21,116 @@
         <th />
     </tr>
 
-@foreach (var item in Model.Postulaciones) {
-    <tr>
-        <td>
-            @*@Html.ActionLink("" + @Html.DisplayFor(modelItem => item.Usuario.UserName), "Details", "Usuario", new { username = item.Usuario.UserName }, new { @class = "btn btn-success" })*@
+    @foreach (var item in Model.Postulaciones)
+    {
+        <tr>
+            <td>
+                @*@Html.ActionLink("" + @Html.DisplayFor(modelItem => item.Usuario.UserName), "Details", "Usuario", new { username = item.Usuario.UserName }, new { @class = "btn btn-success" })*@
 
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#@Html.DisplayFor(modelItem => item.Usuario.UserName)Modal">
-                @Html.DisplayFor(modelItem => item.Usuario.UserName)
-            </button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#@Html.DisplayFor(modelItem => item.Usuario.UserName)Modal">
+                    @Html.DisplayFor(modelItem => item.Usuario.UserName)
+                </button>
 
-            <!-- Modal -->
-            <div class="modal fade" id="@Html.DisplayFor(modelItem => item.Usuario.UserName)Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">@Html.DisplayFor(modelItem => item.Usuario.UserName)</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            DATOS DEL MODAL
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                            @Html.ActionLink("Ver Perfil", "Details", "Usuario", new { username = item.Usuario.UserName }, new { @class = "btn btn-success" })
+                <!-- Modal -->
+                <div class="modal fade" id="@Html.DisplayFor(modelItem => item.Usuario.UserName)Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                @{var cantidadtrabajoscreador = item.Usuario.Propuestas.Where(x => x.CalificacionCreador != null && x.CalificacionGanador != null).Count();}
+                                @{var cantidadtrabajosganador = item.Usuario.Postulaciones.Where(x => (x.Propuesta.UsuarioGanador == x.Usuario) && (x.Propuesta.CalificacionCreador != null && x.Propuesta.CalificacionGanador != null)).Count();}
+                                @{var totalcomoganador = item.Usuario.Postulaciones.Where(x => x.Propuesta.UsuarioGanador == x.Usuario && x.Propuesta.CalificacionCreador != null && x.Propuesta.CalificacionGanador != null).Sum(x => x.Propuesta.CalificacionCreador.Puntuacion);}
+                                @{var totalcomocreador = item.Usuario.Propuestas.Where(x => x.CalificacionCreador != null && x.CalificacionGanador != null).Sum(x => x.CalificacionGanador.Puntuacion);}
+                                @{ float total = totalcomocreador + totalcomoganador;}
+                                @{ float totaltrabajos = cantidadtrabajosganador + cantidadtrabajoscreador;}
+                                @{ float promedio = total / totaltrabajos;}
+                                <h3 class="modal-title" id="exampleModalLabel">
+                                    @Html.DisplayFor(modelItem => item.Usuario.UserName)
 
+                                    @if (promedio >= 7)
+                                    {
+                                        <span class="label label-success">@String.Format("{0:n1}", promedio)</span>
+                                    }
+                                    else if (promedio >= 4 && promedio < 7)
+                                    {
+                                        <span class="label label-warning">@String.Format("{0:n1}", promedio)</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="label label-danger">@String.Format("{0:n1}", promedio)</span>
+                                    }
+
+                                </h3>
+                            </div>
+
+                            <div class="modal-body row">
+                                <div class="col-md-4 col-sm-4 col-xs-12 text-center">
+                                    <img src="@Url.Content("~/ProfilePictures/" + item.Usuario.URLFotoPerfil + ".jpg")" alt="foto" class="img-thumbnail img-rounded">
+                                </div>
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    <br/>
+                                    <dl class="dl-horizontal">
+                                        <dt>Nombre</dt>
+                                        <dd>@item.Usuario.Nombre @item.Usuario.Apellido</dd>
+                                        <dt>Ubicacion</dt>
+                                        <dd>TODO</dd>
+                                        <dt>Descipcion</dt>
+                                        <dd>@item.Usuario.Descripcion</dd>
+                                    </dl>
+                                </div>
+                            </div>
+
+
+                            
+
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    @Html.ActionLink("Ver Perfil", "Details", "Usuario", new { username = item.Usuario.UserName }, new { @class = "btn btn-success" })
+
+                </div>
+                </div>
+                </div>
+                </div>
+
+                </td>
+                <td>
+                    @cantidadtrabajosganador
+                </td>
+                <td>
+                    @promedio
+                </td>
+                <td>
+
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#@Html.DisplayFor(modelItem => item.Usuario.UserName)ModalAceptar">
+                        Aceptar
+                    </button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="@Html.DisplayFor(modelItem => item.Usuario.UserName)ModalAceptar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Aceptar a @Html.DisplayFor(modelItem => item.Usuario.UserName)</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    ?Confirma que desea aceptar a @Html.DisplayFor(modelItem => item.Usuario.UserName)?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                    @Html.ActionLink("Aceptar", "AceptarPostulacion", "Propuestas", new { id = Model.Id }, new { @class = "btn btn-success" })
+
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-
-        </td>
-        <td>
-            TODO
-        </td>
-        <td>
-            TODO
-        </td>
-        <td>
-
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#@Html.DisplayFor(modelItem => item.Usuario.UserName)ModalAceptar">
-                Aceptar
-            </button>
-
-            <!-- Modal -->
-            <div class="modal fade" id="@Html.DisplayFor(modelItem => item.Usuario.UserName)ModalAceptar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Aceptar a @Html.DisplayFor(modelItem => item.Usuario.UserName)</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            ?Confirma que desea aceptar a @Html.DisplayFor(modelItem => item.Usuario.UserName)?
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                            @Html.ActionLink("Aceptar", "AceptarPostulacion", "Propuestas", new { id = Model.Id }, new { @class = "btn btn-success" })
-
-                        </div>
-                    </div>
-                </div>
-            </div>
 
 
-           
-        </td>
-    </tr>
-}
 
-</table>
+                </td>
+            </tr>
+        }
+
+                            </table>

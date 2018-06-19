@@ -44,5 +44,8 @@ namespace Shootr.Models
         public int? CalificacionGanadorId { get; set; }
         [ForeignKey("CalificacionGanadorId")]
         public virtual Calificacion CalificacionGanador { get; set; }
+
+        [InverseProperty("Propuesta")]
+        public virtual ICollection<Pregunta> Preguntas { get; set; }
     }
 }

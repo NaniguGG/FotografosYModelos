@@ -31,6 +31,9 @@ namespace Shootr.Models
 
         [InverseProperty("Usuario")]
         public virtual ICollection<Postulacion> Postulaciones { get; set; }
+
+        [InverseProperty("Asker")]
+        public virtual ICollection<Pregunta> PreguntasHechas { get; set; }
     }
 
 }

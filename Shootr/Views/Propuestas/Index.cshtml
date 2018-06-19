@@ -4,65 +4,62 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>Propuestas @Html.ActionLink("Crear nueva", "Create", null, new { @class = "btn btn-info" })</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Creador.UserName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Nombre)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Descripccion)
-        </th>
-        <th>
-            Foto
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Activa)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Lugar)
-        </th>
-        <th></th>
-    </tr>
 
-    @foreach (var item in Model)
-    {
-
-        if (item.Activa == true)
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        @using (Html.BeginForm())
         {
-            <tr>
-                <td>
-                    @Html.ActionLink("" + @Html.DisplayFor(modelItem => item.Creador.UserName), "Details", "Usuario", new { username = item.Creador.UserName }, new { @class = "btn btn-success" })
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Nombre)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Descripccion)
-                </td>
-                <td>
-                    <img class="img-responsive img-center" src="@Url.Content("~/PropuestasPictures/" + item.URLFoto + ".jpg")" alt="Image" />
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Activa)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Lugar)
-                </td>
-                <td>
-                    @Html.ActionLink("Ver Detalles", "Details", new { id = item.Id }) |
-                </td>
-            </tr>
-
+           
+                <dl class="dl-horizontal">
+                    <dt>
+                        Buscar:
+                    </dt>
+                    <dd>
+                        @Html.TextBox("SearchString", null, new { @class = "form-control" }) <input type="submit" value="Search" class="btn btn-primary btn-success" />
+                    </dd>
+                </dl>
+            
         }
 
-    }
+    </div> 
+</div>
 
-</table>
+
+<div class="row">
+
+
+
+
+
+    @*@{int index = 0;}*@
+
+    @foreach (var item in Model.Where(x => x.Activa == true))
+    {
+
+        @*if (index % 3 == 0)
+            {
+                @Html.Raw(@"<div class=""row"">")
+            }*@
+
+        <div class="col-md-4 col-sm-12 col-xs-12">
+            <div class="panel panel-info">
+                <div class="panel-heading">@item.Nombre</div>
+                <div class="panel-body">
+                    <img class="img-thumbnail img-center" src="@Url.Content("~/PropuestasPictures/" + item.URLFoto + ".jpg")" alt="Image" />
+                </div>
+                <div class="panel-footer">@Html.ActionLink("Ver Detalles", "Details", new { id = item.Id }, new { @class = "btn btn-success" })</div>
+            </div>
+        </div>
+
+        @*if (index % 3 == 2)
+            {
+                @Html.Raw(@"</div>")
+                index++;
+            }*@
+
+    }
+</div>
+<div class="row"></div>
+

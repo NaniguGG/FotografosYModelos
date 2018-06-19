@@ -24,12 +24,30 @@ namespace Shootr.Controllers
     {
         private IdentityDb db = new IdentityDb();
 
-        // GET: Propuestas
-        public ActionResult Index()
+        //// GET: Propuestas
+        //public ActionResult Index()
+        //{
+        //    var propuestas = db.Propuestas.Include(p => p.Creador);
+        //    return View(propuestas.ToList());
+        //}
+
+        // GET: Publications
+        public ActionResult Index( string searchString)
         {
-            var propuestas = db.Propuestas.Include(p => p.Creador);
+
+            var propuestas = from s in db.Propuestas select s;
+
+            propuestas = propuestas.Where(x => x.Activa == true);
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                propuestas = propuestas.Where(s => s.Nombre.Contains(searchString) || s.Creador.UserName.Contains(searchString) || s.Lugar.Contains(searchString));
+            }
+
             return View(propuestas.ToList());
         }
+
+
 
         // GET: Propuestas/Details/5
         public ActionResult Details(int id)
@@ -329,6 +347,90 @@ namespace Shootr.Controllers
             var currentUser = manager.FindById(User.Identity.GetUserId());
             return currentUser.MyUserInfo;
         }
+
+        //[Route("Folder/PostComment/{Id}")]
+        //[HttpPost, ActionName("PostComment")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult PostComment(int id, string NewComment)
+        {
+            try
+            {
+                if (String.Empty != NewComment)
+                {
+                    Propuesta propuesta = db.Propuestas.Find(id);
+
+                    Usuario usuarioActual = ObtenerUsuarioActual(User);
+
+                    //si la propuesta no esta ya cerrada
+                    if (propuesta.Activa == true) {
+                        //si no soy el dueno
+                        if (propuesta.Creador.Id != usuarioActual.Id) {
+
+                            Pregunta pregunta = new Pregunta();
+
+                            pregunta.AskerId = usuarioActual.Id;
+
+                            pregunta.PropuestaId = propuesta.Id;
+
+                            pregunta.QuestionString = NewComment;
+                            pregunta.QuestionRead = false;
+                            pregunta.QuestionRead = false;
+                            pregunta.AnswerRead = false;
+
+                            db.Preguntas.Add(pregunta);
+                            db.SaveChanges();
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                return RedirectToAction("Details", new { Id = id });
+            }
+            return RedirectToAction("Details", new { Id = id });
+        }
+
+
+
+        public ActionResult PostAnswer(int id, string NewComment)
+        {
+            Pregunta pregunta = db.Preguntas.Where(x => x.Id == id).First();
+            Propuesta propuesta = pregunta.Propuesta;
+            try
+            {
+                if (String.Empty != NewComment)
+                {
+                    
+                    Usuario usuarioActual = ObtenerUsuarioActual(User);
+
+                    //si la propuesta no esta ya cerrada
+                    if (propuesta.Activa == true)
+                    {
+                        //si no soy el dueno
+                        if (propuesta.Creador.Id == usuarioActual.Id)
+                        {
+
+                            if (usuarioActual.Id == propuesta.Creador.Id)
+                            {
+                                pregunta.AnswerString = NewComment;
+
+                                db.SaveChanges();
+                            }
+
+                            db.SaveChanges();
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                return RedirectToAction("Details", new { Id = propuesta.Id });
+            }
+            return RedirectToAction("Details", new { Id = propuesta.Id });
+
+        }
+
 
 
     }

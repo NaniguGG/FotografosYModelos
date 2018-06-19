@@ -9,126 +9,279 @@
 @{ var userName = System.Web.HttpContext.Current.User.Identity.Name; }
 
 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-    <h4>Propuestas abiertas</h4>
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">Name</th>
-                <th scope="col"># de postulantes</th>
-                <th scope="col"></th>
-            </tr>
-        </thead>
-        <tbody>
+    <div class="panel panel-info">
+        <div class="panel-heading"><h4>Propuestas abiertas</h4> </div>
+        <div class="panel-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col"># de postulantes</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
 
-            @foreach (var item in Model.Propuestas.Where(x => x.Activa == true))
-            {
-                <tr>
-                    <td>@item.Nombre</td>
-                    <td>@item.Postulaciones.Count()</td>
-                    <td>@Html.ActionLink("Ver postulantes", "VerPostulaciones", "Propuestas", new { id = item.Id }, new { @class = "btn btn-success" })</td>
-                </tr>
+                    @foreach (var item in Model.Propuestas.Where(x => x.Activa == true))
+                    {
+                        <tr>
+                            <td>@item.Nombre</td>
+                            <td>@item.Postulaciones.Count()</td>
+                            <td>@Html.ActionLink("Ver postulantes", "VerPostulaciones", "Propuestas", new { id = item.Id }, new { @class = "btn btn-success" })</td>
+                        </tr>
 
-            }
-        </tbody>
-    </table>
-</div>
-
-
-
-<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-    <h4>Propuestas Cerradas (completar)</h4>
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">Name</th>
-                <th scope="col"></th>
-            </tr>
-        </thead>
-        <tbody>
-
-
-
-            @foreach (var item in Model.Propuestas.Where(x => x.CalificacionCreador == null || x.CalificacionGanador == null))
-            {
-                <tr>
-                    <td>@item.Nombre</td>
-                    <td>
-                        
-                        @if (userName == item.Creador.UserName && item.CalificacionCreador == null)
-                        {
-                            @Html.ActionLink("Calificar", "Calificar", "Propuestas", new { id = item.Id }, new { @class = "btn btn-success" })
-                        }
-
-
-                    </td>
-                </tr>
-
-            }
-            @foreach (var item in Model.Postulaciones.Where(x => x.Propuesta.UsuarioGanador != null && x.Propuesta.UsuarioGanador.UserName == userName && x.Propuesta.CalificacionGanador == null))
-            {
-
-                <tr>
-                    <td>@item.Propuesta.Nombre</td>
-                    <td>
-                        
-                        @if (userName == item.Propuesta.UsuarioGanador.UserName && item.Propuesta.CalificacionGanador == null)
-                        {
-                            @Html.ActionLink("Calificar", "Calificar", "Propuestas", new { id = item.Propuesta.Id }, new { @class = "btn btn-success" })
-                        }
-                    </td>
-                </tr>
-
-            }
-        </tbody>
-    </table>
-</div>
-
-
-<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-    <h4>Propuestas TERMINADAS (completar)</h4>
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">Name</th>
-                <th scope="col"></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Propuestas.Where(x => x.CalificacionCreador != null && x.CalificacionGanador != null))
-            {
-                <tr>
-                    <td>@item.Nombre</td>
-                    <td>
-                             review
-
-                    </td>
-                </tr>
-
-            }
-            @foreach (var item in Model.Postulaciones.Where(x => x.Propuesta.CalificacionGanador != null && x.Propuesta.UsuarioGanador.UserName == userName && x.Propuesta.CalificacionCreador != null))
-            {
-
-                <tr>
-                    <td>@item.Propuesta.Nombre</td>
-                    <td>
-                       review
-                    </td>
-                </tr>
-
-            }
-        </tbody>
-    </table>
-</div>
-
-
-
-
-
-<div class="row">
-    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        comentarios sin responder
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
+
+    
+    
 </div>
+
+
+
+<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+    <div class="panel panel-info">
+        <div class="panel-heading"><h4>Propuestas aceptadas</h4> </div>
+        <div class="panel-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+
+
+
+                    @foreach (var item in Model.Propuestas.Where(x => x.UsuarioGanador != null && (x.CalificacionCreador == null || x.CalificacionGanador == null)))
+                    {
+                        <tr>
+                            <td>  <a href="/Propuestas/Details/@item.Id"> @item.Nombre</a></td>
+                            <td>
+                                @if (userName == item.Creador.UserName && item.CalificacionCreador == null)
+                                {
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#@Html.DisplayFor(modelItem => item.UsuarioGanador.UserName)Modal">
+                                        @Html.DisplayFor(modelItem => item.UsuarioGanador.UserName)
+                                    </button>
+
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="@Html.DisplayFor(modelItem => item.UsuarioGanador.UserName)Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+
+                                                    <h3 class="modal-title" id="exampleModalLabel">
+                                                        @Html.DisplayFor(modelItem => item.UsuarioGanador.UserName)
+
+                                                    </h3>
+                                                </div>
+
+                                                <div class="modal-body row">
+                                                    <div class="col-md-4 col-sm-4 col-xs-12 text-center">
+                                                        <img src="@Url.Content("~/ProfilePictures/" + item.UsuarioGanador.URLFotoPerfil + ".jpg")" alt="foto" class="img-thumbnail img-rounded">
+                                                    </div>
+                                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                                        <br />
+                                                        <dl class="dl-horizontal">
+                                                            <dt>Nombre</dt>
+                                                            <dd>@item.UsuarioGanador.Nombre @item.UsuarioGanador.Apellido</dd>
+                                                            <dt>Ubicacion</dt>
+                                                            <dd>TODO</dd>
+                                                            <dt>E-mail</dt>
+                                                            <dd>@item.UsuarioGanador.Email</dd>
+                                                            <dt>Telefono</dt>
+                                                            <dd>@item.UsuarioGanador.Telefono</dd>
+
+                                                        </dl>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                                    @Html.ActionLink("Ver Perfil", "Details", "Usuario", new { username = item.UsuarioGanador.UserName }, new { @class = "btn btn-success" })
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                                }
+
+
+
+                                @if (userName == item.Creador.UserName && item.CalificacionCreador == null)
+                                {
+                                    @Html.ActionLink("Calificar", "Calificar", "Propuestas", new { id = item.Id }, new { @class = "btn btn-success" })
+                                }
+
+
+                            </td>
+                        </tr>
+
+                    }
+                    @foreach (var item in Model.Postulaciones.Where(x => x.Propuesta.UsuarioGanador != null && x.Propuesta.UsuarioGanador.UserName == userName && x.Propuesta.CalificacionGanador == null))
+                    {
+
+                        <tr>
+                            <td> <a href="/Propuestas/Details/@item.Propuesta.Id"> @item.Propuesta.Nombre</a></td>
+                            <td>
+
+                                @if (userName == item.Propuesta.UsuarioGanador.UserName && item.Propuesta.CalificacionGanador == null)
+                                {
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#@Html.DisplayFor(modelItem => item.Propuesta.UsuarioGanador.UserName)Modal">
+                                        @Html.DisplayFor(modelItem => item.Propuesta.Creador.UserName)
+                                    </button>
+
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="@Html.DisplayFor(modelItem => item.Propuesta.UsuarioGanador.UserName)Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+
+                                                    <h3 class="modal-title" id="exampleModalLabel">
+                                                        @Html.DisplayFor(modelItem => item.Propuesta.Creador.UserName)
+
+                                                    </h3>
+                                                </div>
+
+                                                <div class="modal-body row">
+                                                    <div class="col-md-4 col-sm-4 col-xs-12 text-center">
+                                                        <img src="@Url.Content("~/ProfilePictures/" + item.Propuesta.Creador.URLFotoPerfil + ".jpg")" alt="foto" class="img-thumbnail img-rounded">
+                                                    </div>
+                                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                                        <br />
+                                                        <dl class="dl-horizontal">
+                                                            <dt>Nombre</dt>
+                                                            <dd>@item.Propuesta.Creador.Nombre @item.Propuesta.Creador.Apellido</dd>
+                                                            <dt>Ubicacion</dt>
+                                                            <dd>TODO</dd>
+                                                            <dt>E-mail</dt>
+                                                            <dd>@item.Propuesta.Creador.Email</dd>
+                                                            <dt>Telefono</dt>
+                                                            <dd>@item.Propuesta.Creador.Telefono</dd>
+
+                                                        </dl>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                                    @Html.ActionLink("Ver Perfil", "Details", "Usuario", new { username = item.Propuesta.Creador.UserName }, new { @class = "btn btn-success" })
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                                }
+
+
+
+                                @if (userName == item.Propuesta.UsuarioGanador.UserName && item.Propuesta.CalificacionGanador == null)
+                                {
+                                    @Html.ActionLink("Calificar", "Calificar", "Propuestas", new { id = item.Propuesta.Id }, new { @class = "btn btn-success" })
+                                }
+                            </td>
+                        </tr>
+
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+  
+</div>
+
+
+<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+
+    <div class="panel panel-info">
+        <div class="panel-heading"><h4>Propuestas realizadas</h4> </div>
+        <div class="panel-body">
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Propuestas.Where(x => x.CalificacionCreador != null && x.CalificacionGanador != null))
+                    {
+                        <tr>
+                            <td>
+                                @if (item.CalificacionGanador.Puntuacion >= 7)
+                                {
+                                    <span class="label label-success">@String.Format("{0:n1}", item.CalificacionGanador.Puntuacion)</span>
+                                }
+                                else if (item.CalificacionGanador.Puntuacion >= 4 && item.CalificacionGanador.Puntuacion < 7)
+                                {
+                                    <span class="label label-warning">@String.Format("{0:n1}", item.CalificacionGanador.Puntuacion)</span>
+                                }
+                                else
+                                {
+                                    <span class="label label-danger">@String.Format("{0:n1}", item.CalificacionGanador.Puntuacion)</span>
+                                }
+
+                                <a href="/Propuestas/Details/@item.Id">  @item.Nombre</a>
+                            </td>
+                            <td>
+
+
+                                "@item.CalificacionGanador.Comentario"
+
+
+                            </td>
+                        </tr>
+
+                    }
+                    @foreach (var item in Model.Postulaciones.Where(x => x.Propuesta.CalificacionGanador != null && x.Propuesta.UsuarioGanador.UserName == userName && x.Propuesta.CalificacionCreador != null))
+                    {
+
+                        <tr>
+                            <td>
+                                @if (item.Propuesta.CalificacionCreador.Puntuacion >= 7)
+                                {
+                                    <span class="label label-success">@String.Format("{0:n1}", item.Propuesta.CalificacionCreador.Puntuacion)</span>
+                                }
+                                else if (item.Propuesta.CalificacionCreador.Puntuacion >= 4 && item.Propuesta.CalificacionCreador.Puntuacion < 7)
+                                {
+                                    <span class="label label-warning">@String.Format("{0:n1}", item.Propuesta.CalificacionCreador.Puntuacion)</span>
+                                }
+                                else
+                                {
+                                    <span class="label label-danger">@String.Format("{0:n1}", item.Propuesta.CalificacionCreador.Puntuacion)</span>
+                                }
+
+                                <a href="/Propuestas/Details/@item.Propuesta.Id">  @item.Propuesta.Nombre</a>
+                            </td>
+                            <td>
+                                "@item.Propuesta.CalificacionCreador.Comentario""
+                            </td>
+                        </tr>
+
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    
+</div>
+
 
 
 

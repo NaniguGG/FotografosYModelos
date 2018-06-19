@@ -4,137 +4,201 @@
     ViewBag.Title = "Usuario";
 }
 
-<h2> @Html.DisplayFor(model => model.UserName)</h2>
 
 
+@{var cantidadtrabajosganador = Model.Postulaciones.Where(x => (x.Propuesta.UsuarioGanador == x.Usuario) && (x.Propuesta.CalificacionCreador != null && x.Propuesta.CalificacionGanador != null)).Count();}
+@{var totalcomoganador = Model.Postulaciones.Where(x => x.Propuesta.UsuarioGanador == x.Usuario && x.Propuesta.CalificacionCreador != null && x.Propuesta.CalificacionGanador != null).Sum(x => x.Propuesta.CalificacionCreador.Puntuacion);}
+@{var cantidadtrabajoscreador = Model.Propuestas.Where(x => x.CalificacionCreador != null && x.CalificacionGanador != null).Count();}
+@{var totalcomocreador = Model.Propuestas.Where(x => x.CalificacionCreador != null && x.CalificacionGanador != null).Sum(x => x.CalificacionGanador.Puntuacion);}
+@{ float total = totalcomocreador + totalcomoganador;}
+@{ float totaltrabajos = cantidadtrabajosganador + cantidadtrabajoscreador;}
+@{ float promedio = total / totaltrabajos;}
+<h2>
+    @Html.DisplayFor(model => model.UserName) - @Html.DisplayFor(model => model.Rol)
 
-<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-
-    <div class="col-md-12 text-center">
-        <img class="img-responsive img-center" src="@Url.Content("~/ProfilePictures/" + Model.URLFotoPerfil + ".jpg")" alt="Image" />
-    </div>
-    <h4>MyUserInfo</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Nombre)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Nombre)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Apellido)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Apellido)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Telefono)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Telefono)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Descripcion)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Descripcion)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Facebook)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Facebook)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Instagram)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Instagram)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Website)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Website)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.URLFotoPerfil)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.URLFotoPerfil)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Rol)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Rol)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.UserName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.UserName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-
-    </dl>
-</div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
-
-@Html.ActionLink("Agregar foto a porfolio", "AgregarFoto", "Usuario")
-
-<div class="col-md-8 col-sm-4">
-    @if (Model.Fotos != null)
+    @if (promedio >= 7)
     {
-        List<Shootr.Models.FotoPorfolio> list = Model.Fotos.ToList();
-        foreach (var foto in list.Select((x, i) => new { fotourl = x, Index = i }))
-        {
-
-            if (foto.Index % 3 == 0)
-            {
-                @Html.Raw(@"<div class=""row"">")
-            }
-
-            <img class="img-responsive" src="@Url.Content("~/PorfoliosPictures/" + foto.fotourl.Url + ".jpg")" alt="Image" width="350" height="450" />
-
-        }
-
+        <span class="label label-success">@String.Format("{0:n1}", promedio)</span>
+    }
+    else if (promedio >= 4 && promedio < 7)
+    {
+        <span class="label label-warning">@String.Format("{0:n1}", promedio)</span>
+    }
+    else
+    {
+        <span class="label label-danger">@String.Format("{0:n1}", promedio)</span>
     }
 
+    @if (User.Identity.Name == Model.UserName)
+    {
+        <a href="Usuario/Editar" type="button" class="btn btn-primary">Editar</a>
+    }
+
+</h2>
+
+<br />
+
+
+
+<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h2>
+                @Html.DisplayFor(model => model.Nombre) @Html.DisplayFor(model => model.Apellido)
+
+            </h2>
+        </div>
+        <div class="panel-body">
+            <img class="img-responsive mx-auto d-block" src="@Url.Content("~/ProfilePictures/" + Model.URLFotoPerfil + ".jpg")" alt="Image" />
+        </div>
+        <div class="panel-body">
+
+
+            @Html.DisplayFor(model => model.Descripcion)
+
+        </div>
+
+        <div class="panel-body">
+            <dl>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.Website)
+                </dt>
+
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Website) asdasd
+                </dd>
+
+                <dt class="col-sm-4">
+                    Ubicacion
+                </dt>
+
+                <dd class="col-sm-8">
+                    COMPLETAR UBICACION
+                </dd>
+            </dl>
+        </div>
+
+
+    </div>
+
+</div>
+
+
+
+<div class="col-md-8 col-sm-12 col-xs-12" >
+
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h2>
+                Porfolio
+                @if (User.Identity.Name == Model.UserName)
+                {
+                    @Html.ActionLink("Agregar foto", "AgregarFoto", "Usuario", null, new { @class = "btn btn-primary" })
+                }
+
+            </h2>
+        </div>
+
+        <div class="panel-body">
+            @if (Model.Fotos != null)
+            {
+                List<Shootr.Models.FotoPorfolio> list = Model.Fotos.ToList();
+                foreach (var foto in list.Select((x, i) => new { fotourl = x, Index = i }))
+                {
+
+                    if (foto.Index % 3 == 0)
+                    {
+                        @Html.Raw(@"<div class=""row"">")
+                    }
+
+                    <img class="img-responsive" src="@Url.Content("~/PorfoliosPictures/" + foto.fotourl.Url + ".jpg")" alt="Image" />
+                    <br />
+                }
+
+            }
+
+        </div>
+
+    </div>
 
 
 
 
 </div>
 
+
+
+    <div class="col-md-12 col-sm-12 col-xs-12 ">
+
+
+
+        <h2>
+            Trabajos realizados
+        </h2>
+
+        @{var trabajos = Model.Postulaciones.Where(x => (x.Propuesta.UsuarioGanador == x.Usuario || x.Propuesta.Creador == x.Usuario) && (x.Propuesta.CalificacionCreador != null && x.Propuesta.CalificacionGanador != null)).OrderByDescending(x => x.PropuestaId);}
+        @foreach (var x in trabajos)
+        {
+            if (x.Propuesta.UsuarioGanador == x.Usuario && x.Propuesta.CalificacionCreador != null && x.Propuesta.CalificacionGanador != null)
+            {
+                <div class="row">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <a href="/Propuestas/Details/@x.PropuestaId">@x.Propuesta.Nombre</a> con  <a href="/Usuario/@x.Propuesta.Creador.UserName">@x.Propuesta.Creador.UserName</a>
+                        </div>
+                        <div class="panel-body">
+                            @if (x.Propuesta.CalificacionCreador.Puntuacion >= 7)
+                            {
+                                <span class="label label-success">@String.Format("{0:n1}", x.Propuesta.CalificacionCreador.Puntuacion)</span>
+                            }
+                            else if (x.Propuesta.CalificacionCreador.Puntuacion >= 4 && promedio < 7)
+                            {
+                                <span class="label label-warning">@String.Format("{0:n1}", x.Propuesta.CalificacionCreador.Puntuacion)</span>
+                            }
+                            else
+                            {
+                                <span class="label label-danger">@String.Format("{0:n1}", x.Propuesta.CalificacionCreador.Puntuacion)</span>
+                            }
+
+                            "@x.Propuesta.CalificacionCreador.Comentario"
+
+                        </div>
+                    </div>
+                </div>
+            }
+
+        }
+        @{var trabajoscreados = Model.Propuestas.Where(x => (x.UsuarioGanador == Model || x.Creador == Model) && (x.CalificacionCreador != null && x.CalificacionGanador != null)).OrderByDescending(x => x.Id);}
+        @foreach (var x in trabajoscreados)
+        {
+            if (x.CalificacionCreador != null && x.CalificacionGanador != null)
+            {
+                <div class="row">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <a href="/Propuestas/Details/@x.Id">@x.Nombre</a> con con  <a href="/Usuario/@x.UsuarioGanador.UserName">@x.UsuarioGanador.UserName</a>
+                        </div>
+                        <div class="panel-body">
+                            @if (x.CalificacionGanador.Puntuacion >= 7)
+                            {
+                                <span class="label label-success">@String.Format("{0:n1}", x.CalificacionGanador.Puntuacion)</span>
+                            }
+                            else if (x.CalificacionGanador.Puntuacion >= 4 && promedio < 7)
+                            {
+                                <span class="label label-warning">@String.Format("{0:n1}", x.CalificacionGanador.Puntuacion)</span>
+                            }
+                            else
+                            {
+                                <span class="label label-danger">@String.Format("{0:n1}", x.CalificacionGanador.Puntuacion)</span>
+                            }
+
+                            "@x.CalificacionGanador.Comentario"
+
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
 
