@@ -71,8 +71,6 @@
                                     <dl class="dl-horizontal">
                                         <dt>Nombre</dt>
                                         <dd>@item.Usuario.Nombre @item.Usuario.Apellido</dd>
-                                        <dt>Ubicacion</dt>
-                                        <dd>TODO</dd>
                                         <dt>Descipcion</dt>
                                         <dd>@item.Usuario.Descripcion</dd>
                                     </dl>
@@ -120,7 +118,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                                    @Html.ActionLink("Aceptar", "AceptarPostulacion", "Propuestas", new { id = Model.Id }, new { @class = "btn btn-success" })
+                                    @Html.ActionLink("Aceptar", "AceptarPostulacion", "Propuestas", new { id = item.Id}, new { @class = "btn btn-success" })
 
                                 </div>
                             </div>

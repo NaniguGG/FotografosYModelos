@@ -33,15 +33,15 @@
 
 
 
-    @*@{int index = 0;}*@
+    @{int index = 0;}
 
     @foreach (var item in Model.Where(x => x.Activa == true))
     {
 
-        @*if (index % 3 == 0)
-            {
+        if (index % 3 == 0)
+        {
                 @Html.Raw(@"<div class=""row"">")
-            }*@
+        }
 
         <div class="col-md-4 col-sm-12 col-xs-12">
             <div class="panel panel-info">
@@ -53,11 +53,13 @@
             </div>
         </div>
 
-        @*if (index % 3 == 2)
-            {
+        if (index % 3 == 2)
+        {
                 @Html.Raw(@"</div>")
-                index++;
-            }*@
+
+        }
+        
+        index++;
 
     }
 </div>

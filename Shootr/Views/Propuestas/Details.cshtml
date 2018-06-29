@@ -14,54 +14,107 @@
 
         <div class="col-md-5 text-center">
 
-            <dl class="dl-horizontal">
-                <dt>
-                    @Html.DisplayNameFor(model => model.Creador.Nombre)
-                </dt>
+            
 
-                <dd>
-                    @Html.ActionLink("" + @Html.DisplayFor(model => model.Creador.UserName), "Details", "Usuario", new { id = Model.Creador.UserName }, new { @class = "btn btn-success" })
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#@Html.DisplayFor(modelItem => Model.Creador.UserName)Modal">
+                        @Html.DisplayFor(modelItem => Model.Creador.UserName)
+                    </button>
 
-                </dd>
+                    <!-- Modal -->
+                    <div class="modal fade" id="@Html.DisplayFor(modelItem => Model.Creador.UserName)Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    @{var cantidadtrabajoscreador = Model.Creador.Propuestas.Where(x => x.CalificacionCreador != null && x.CalificacionGanador != null).Count();}
+                                    @{var cantidadtrabajosganador = Model.Creador.Postulaciones.Where(x => (x.Propuesta.UsuarioGanador == x.Usuario) && (x.Propuesta.CalificacionCreador != null && x.Propuesta.CalificacionGanador != null)).Count();}
+                                    @{var totalcomoganador = Model.Creador.Postulaciones.Where(x => x.Propuesta.UsuarioGanador == x.Usuario && x.Propuesta.CalificacionCreador != null && x.Propuesta.CalificacionGanador != null).Sum(x => x.Propuesta.CalificacionCreador.Puntuacion);}
+                                    @{var totalcomocreador = Model.Creador.Propuestas.Where(x => x.CalificacionCreador != null && x.CalificacionGanador != null).Sum(x => x.CalificacionGanador.Puntuacion);}
+                                    @{ float total = totalcomocreador + totalcomoganador;}
+                                    @{ float totaltrabajos = cantidadtrabajosganador + cantidadtrabajoscreador;}
+                                    @{ float promedio = total / totaltrabajos;}
+                                    <h3 class="modal-title" id="exampleModalLabel">
+                                        @Html.DisplayFor(modelItem => Model.Creador.UserName)
 
-                <dt>
-                    @Html.DisplayNameFor(model => model.Lugar)
-                </dt>
+                                        @if (promedio >= 7)
+                                        {
+                                            <span class="label label-success">@String.Format("{0:n1}", promedio)</span>
+                                        }
+                                        else if (promedio >= 4 && promedio < 7)
+                                        {
+                                            <span class="label label-warning">@String.Format("{0:n1}", promedio)</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="label label-danger">@String.Format("{0:n1}", promedio)</span>
+                                        }
 
-                <dd>
+                                    </h3>
+                                </div>
+
+                                <div class="modal-body row">
+                                    <div class="col-md-4 col-sm-4 col-xs-12 text-center">
+                                        <img src="@Url.Content("~/ProfilePictures/" + Model.Creador.URLFotoPerfil + ".jpg")" alt="foto" class="img-thumbnail img-rounded">
+                                    </div>
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                        <br />
+                                        <dl class="dl-horizontal">
+                                            <dt>Nombre</dt>
+                                            <dd>@Model.Creador.Nombre @Model.Creador.Apellido</dd>
+                                            <dt>Descipcion</dt>
+                                            <dd>@Model.Creador.Descripcion</dd>
+                                        </dl>
+                                    </div>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                    @Html.ActionLink("Ver Perfil", "Details", "Usuario", new { username = Model.Creador.UserName }, new { @class = "btn btn-success" })
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="panel-body">
                     @Html.DisplayFor(model => model.Lugar)
-                </dd>
-
-                <dt>
-                    @Html.DisplayNameFor(model => model.Descripccion)
-                </dt>
-
-                <dd>
+                </div>
+                <div class="panel-body">
                     @Html.DisplayFor(model => model.Descripccion)
-                </dd>
+                </div>
 
-            </dl>
+                <div class="panel-footer">
 
-            @*mi nombre*@
-            @{ var userName = System.Web.HttpContext.Current.User.Identity.Name; }
+                    @*mi nombre*@
+                    @{ var userName = System.Web.HttpContext.Current.User.Identity.Name; }
 
 
-            @*Si soy el creador*@
-            @{
-                if (userName == Model.Creador.UserName)
-                {
-                    <button type="button" class="btn btn-secondary">Usted es el creador!</button>
-                }
-                else if (Model.Postulaciones.Where(x => x.Usuario.UserName == userName).Count() > 0)
-                {
-                    <button type="button" class="btn btn-secondary">Usted ya se postulo!</button>
-                }
-                else
-                {
-                    @Html.ActionLink("Postularse", "Postularse", "Propuestas", new { id = Model.Id }, new { @class = "btn btn-success" })
-                }
-            }
+                    @*Si soy el creador*@
+                    @{
+                        if (userName == Model.Creador.UserName)
+                        {
+                            <button type="button" class="btn btn-secondary">Usted es el creador!</button>
+                        }
+                        else if (Model.Postulaciones.Where(x => x.Usuario.UserName == userName).Count() > 0)
+                        {
+                            <button type="button" class="btn btn-secondary">Usted ya se postulo!</button>
+                        }
+                        else
+                        {
+                            @Html.ActionLink("Postularse", "Postularse", "Propuestas", new { id = Model.Id }, new { @class = "btn btn-success" })
+                        }
+                    }
 
+
+                </div>
+            </div>
+
+
+
+
+         
 
 
 

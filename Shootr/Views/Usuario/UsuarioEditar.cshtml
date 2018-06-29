@@ -4,7 +4,7 @@
     ViewBag.Title = "UsuarioEditar";
 }
 
-<h2>UsuarioEditar</h2>
+<h2>Editar informacion</h2>
 
 
 @using (Html.BeginForm("Editar", "Usuario",FormMethod.Post, new { enctype = "multipart/form-data" }))
@@ -12,26 +12,9 @@
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h4>MyUserInfo</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.MyUserInfo.Id)
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.MyUserInfo.Nombre, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.MyUserInfo.Nombre, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.MyUserInfo.Nombre, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.MyUserInfo.Apellido, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.MyUserInfo.Apellido, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.MyUserInfo.Apellido, "", new { @class = "text-danger" })
-            </div>
-        </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.MyUserInfo.Telefono, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -74,11 +57,11 @@
         </div>
 
         <div class="form-group">
-             <div class = "control-label col-md-2">Foto de perfil</div>
-             <div class="col-md-10">
-                 @Html.TextBoxFor(m => m.File, new { type = "file" })
-                 @Html.ValidationMessageFor(m => m.File)
-             </div>
+            <label class="control-label col-md-2" for="File">Foto de perfil</label>
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.File, new { type = "file" })
+                @Html.ValidationMessageFor(m => m.File)
+            </div>
         </div>
 
         <div class="form-group">

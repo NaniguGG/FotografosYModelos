@@ -307,6 +307,8 @@ namespace Shootr.Controllers
                         db.SaveChanges();
                     }
                 }
+
+
             }
 
             int idaux = propuesta.Id;
@@ -324,12 +326,15 @@ namespace Shootr.Controllers
                 postulacion.Propuesta.UsuarioGanadorId = postulacion.Usuario.Id;
                 postulacion.Propuesta.Activa = false;
                 db.Entry(postulacion).State = EntityState.Modified;
+				//db.Entry(postulacion.Propuesta).State = EntityState.Modified;
+				//db.Entry(postulacion.Propuesta.Creador).State = EntityState.Modified;
                 await db.SaveChangesAsync();
             }
 
             //ir al dashboard
 
-            return RedirectToRoute("/Dashboard");
+            //return RedirectToRoute("Dashboard");
+			return RedirectToAction("Dashboard", "Usuario", null);
         }
         protected override void Dispose(bool disposing)
         {

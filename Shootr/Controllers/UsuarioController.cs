@@ -148,11 +148,11 @@ namespace Shootr.Controllers
                 Usuario usuarioActual = ObtenerUsuarioActual(User);
 
                 //copiar una por una las propiedades al usuario actual
-                usuarioActual.Apellido = userInfo.Apellido;
+                //usuarioActual.Apellido = userInfo.Apellido;
                 usuarioActual.Descripcion = userInfo.Descripcion;
                 usuarioActual.Facebook = userInfo.Facebook;
                 usuarioActual.Instagram = userInfo.Instagram;
-                usuarioActual.Nombre = userInfo.Nombre;
+                //usuarioActual.Nombre = userInfo.Nombre;
                 usuarioActual.Rol = userInfo.Rol;
                 usuarioActual.Telefono = userInfo.Telefono;
                 usuarioActual.URLFotoPerfil = userInfo.URLFotoPerfil;
