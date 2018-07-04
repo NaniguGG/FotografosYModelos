@@ -254,31 +254,31 @@ namespace Shootr.Controllers
             return View(propuesta);
         }
 
-        // GET: Propuestas/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Propuesta propuesta = db.Propuestas.Find(id);
-            if (propuesta == null)
-            {
-                return HttpNotFound();
-            }
-            return View(propuesta);
-        }
+        //// GET: Propuestas/Delete/5
+        //public ActionResult Delete(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    Propuesta propuesta = db.Propuestas.Find(id);
+        //    if (propuesta == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    return View(propuesta);
+        //}
 
         // POST: Propuestas/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        [ActionName("Delete")]
+        public ActionResult Delete(int id)
         {
             Propuesta propuesta = db.Propuestas.Find(id);
-            db.Propuestas.Remove(propuesta);
+			propuesta.Activa = false;
+			db.Entry(propuesta).State = EntityState.Modified;
             db.SaveChanges();
-            return RedirectToAction("Index");
-        }
+			return RedirectToAction("Dashboard", "Usuario", null);
+		}
 
         public async System.Threading.Tasks.Task<ActionResult> Postularse(int id)
         {

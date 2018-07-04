@@ -315,6 +315,7 @@
     <Content Include="Views\Propuestas\Postulaciones.cshtml" />
     <Content Include="Views\Usuario\Dashboard.cshtml" />
     <Content Include="Views\Propuestas\Calificar.cshtml" />
+    <Content Include="Views\Home\FAQ.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

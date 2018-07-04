@@ -26,5 +26,12 @@ namespace Shootr.Controllers
 
             return View();
         }
-    }
+
+		public ActionResult FAQ()
+		{
+			ViewBag.Message = "Your FAQ page.";
+
+			return View();
+		}
+	}
 }

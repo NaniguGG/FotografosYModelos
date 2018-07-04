@@ -43,6 +43,10 @@
                                 @{ float total = totalcomocreador + totalcomoganador;}
                                 @{ float totaltrabajos = cantidadtrabajosganador + cantidadtrabajoscreador;}
                                 @{ float promedio = total / totaltrabajos;}
+                                @if (totaltrabajos == 0)
+                                {
+                                    promedio = 0;
+                                }
                                 <h3 class="modal-title" id="exampleModalLabel">
                                     @Html.DisplayFor(modelItem => item.Usuario.UserName)
 

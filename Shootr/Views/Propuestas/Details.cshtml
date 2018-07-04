@@ -18,22 +18,39 @@
 
             <div class="panel panel-info">
                 <div class="panel-heading">
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#@Html.DisplayFor(modelItem => Model.Creador.UserName)Modal">
-                        @Html.DisplayFor(modelItem => Model.Creador.UserName)
-                    </button>
+                    @{var cantidadtrabajoscreador = Model.Creador.Propuestas.Where(x => x.CalificacionCreador != null && x.CalificacionGanador != null).Count();}
+                    @{var cantidadtrabajosganador = Model.Creador.Postulaciones.Where(x => (x.Propuesta.UsuarioGanador == x.Usuario) && (x.Propuesta.CalificacionCreador != null && x.Propuesta.CalificacionGanador != null)).Count();}
+                    @{var totalcomoganador = Model.Creador.Postulaciones.Where(x => x.Propuesta.UsuarioGanador == x.Usuario && x.Propuesta.CalificacionCreador != null && x.Propuesta.CalificacionGanador != null).Sum(x => x.Propuesta.CalificacionCreador.Puntuacion);}
+                    @{var totalcomocreador = Model.Creador.Propuestas.Where(x => x.CalificacionCreador != null && x.CalificacionGanador != null).Sum(x => x.CalificacionGanador.Puntuacion);}
+                    @{ float total = totalcomocreador + totalcomoganador;}
+                    @{ float totaltrabajos = cantidadtrabajosganador + cantidadtrabajoscreador;}
+                    @{ float promedio = total / totaltrabajos;}
+                    @if (totaltrabajos == 0)
+                    {
+                        promedio = 0;
+                    }
+
+                    @if (promedio >= 7)
+                    {
+                        <span class="label label-success">@String.Format("{0:n1}", promedio)</span>
+                    }
+                    else if (promedio >= 4 && promedio < 7)
+                    {
+                        <span class="label label-warning">@String.Format("{0:n1}", promedio)</span>
+                    }
+                    else
+                    {
+                        <span class="label label-danger">@String.Format("{0:n1}", promedio)</span>
+                    }
+                    @Html.DisplayFor(modelItem => Model.Creador.UserName)
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#@Html.DisplayFor(modelItem => Model.Creador.UserName)Modal">Ver detalles</button>
 
                     <!-- Modal -->
                     <div class="modal fade" id="@Html.DisplayFor(modelItem => Model.Creador.UserName)Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    @{var cantidadtrabajoscreador = Model.Creador.Propuestas.Where(x => x.CalificacionCreador != null && x.CalificacionGanador != null).Count();}
-                                    @{var cantidadtrabajosganador = Model.Creador.Postulaciones.Where(x => (x.Propuesta.UsuarioGanador == x.Usuario) && (x.Propuesta.CalificacionCreador != null && x.Propuesta.CalificacionGanador != null)).Count();}
-                                    @{var totalcomoganador = Model.Creador.Postulaciones.Where(x => x.Propuesta.UsuarioGanador == x.Usuario && x.Propuesta.CalificacionCreador != null && x.Propuesta.CalificacionGanador != null).Sum(x => x.Propuesta.CalificacionCreador.Puntuacion);}
-                                    @{var totalcomocreador = Model.Creador.Propuestas.Where(x => x.CalificacionCreador != null && x.CalificacionGanador != null).Sum(x => x.CalificacionGanador.Puntuacion);}
-                                    @{ float total = totalcomocreador + totalcomoganador;}
-                                    @{ float totaltrabajos = cantidadtrabajosganador + cantidadtrabajoscreador;}
-                                    @{ float promedio = total / totaltrabajos;}
+
                                     <h3 class="modal-title" id="exampleModalLabel">
                                         @Html.DisplayFor(modelItem => Model.Creador.UserName)
 
@@ -171,40 +188,67 @@
         <div class="container-fluid col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="panel panel-info">
                 <div class="panel-heading">
-                    <b> @Html.DisplayFor(modelItem => item.Asker.UserName) - PONER LINK, QUIZAS UN MODAL</b>
+
+                    @{var cantidadtrabajoscreador2 = item.Asker.Propuestas.Where(x => x.CalificacionCreador != null && x.CalificacionGanador != null).Count();}
+                    @{var cantidadtrabajosganador2 = item.Asker.Postulaciones.Where(x => (x.Propuesta.UsuarioGanador == x.Usuario) && (x.Propuesta.CalificacionCreador != null && x.Propuesta.CalificacionGanador != null)).Count();}
+                    @{var totalcomoganador2 = item.Asker.Postulaciones.Where(x => x.Propuesta.UsuarioGanador == x.Usuario && x.Propuesta.CalificacionCreador != null && x.Propuesta.CalificacionGanador != null).Sum(x => x.Propuesta.CalificacionCreador.Puntuacion);}
+                    @{var totalcomocreador2 = item.Asker.Propuestas.Where(x => x.CalificacionCreador != null && x.CalificacionGanador != null).Sum(x => x.CalificacionGanador.Puntuacion);}
+                    @{ float total2 = totalcomocreador2 + totalcomoganador2;}
+                    @{ float totaltrabajos2 = cantidadtrabajosganador2 + cantidadtrabajoscreador2;}
+                    @{ float promedio2 = total2 / totaltrabajos2;}
+                    @if (totaltrabajos2 == 0)
+                    {
+                        promedio2 = 0;
+                    }
+
+                    @if (promedio2 >= 7)
+                    {
+                        <span class="label label-success">@String.Format("{0:n1}", promedio2)</span>
+                    }
+                    else if (promedio2 >= 4 && promedio2 < 7)
+                    {
+                        <span class="label label-warning">@String.Format("{0:n1}", promedio2)</span>
+                    }
+                    else
+                    {
+                        <span class="label label-danger">@String.Format("{0:n1}", promedio2)</span>
+                    }
+
+                    <b>  <a href="/Usuario/@Html.DisplayFor(modelItem => item.Asker.UserName)">@Html.DisplayFor(modelItem => item.Asker.UserName)</a></b>
                 </div>
-                <b>Question: </b>@Html.DisplayFor(modelItem => item.QuestionString)
-
-
-
-                @if (item.AnswerString != null)
-                {
-                    <div class="panel-body">
-                        <b>Answer: </b>@Html.DisplayFor(modelItem => item.AnswerString)
+                <div class="panel-body">
+                    <b>Question: </b>@Html.DisplayFor(modelItem => item.QuestionString)
                     </div>
-                }
-                else
-                {
-                    if (User.Identity.Name == Model.Creador.UserName)
+
+
+                    @if (item.AnswerString != null)
                     {
                         <div class="panel-body">
-
-                            @using (Html.BeginForm("PostAnswer/" + item.Id, "Propuestas"))
-                            {
-                                @Html.AntiForgeryToken()
-
-                                @Html.TextArea("NewComment", null, 2, 999, htmlAttributes: new { @class = "form-control", @style = "width: 100%; max-width: 100%;" })
-
-                                <br />
-                                <input type="submit" value="Post" class="btn btn-info pull-right" />
-
-                            }
+                            <b>Answer: </b>@Html.DisplayFor(modelItem => item.AnswerString)
                         </div>
-
                     }
-                }
+                    else
+                    {
+                        if (User.Identity.Name == Model.Creador.UserName)
+                        {
+                            <div class="panel-body">
+
+                                @using (Html.BeginForm("PostAnswer/" + item.Id, "Propuestas"))
+                                {
+                                    @Html.AntiForgeryToken()
+
+                                    @Html.TextArea("NewComment", null, 2, 999, htmlAttributes: new { @class = "form-control", @style = "width: 100%; max-width: 100%;" })
+
+                                    <br />
+                                    <input type="submit" value="Post" class="btn btn-info pull-right" />
+
+                                }
+                            </div>
+
+                        }
+                    }
+                </div>
             </div>
-        </div>
     </div>
  }
 

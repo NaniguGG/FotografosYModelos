@@ -79,7 +79,8 @@ namespace Shootr.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
+					//return RedirectToLocal(returnUrl);
+					return RedirectToAction("Index", "Propuestas");
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:

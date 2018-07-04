@@ -6,6 +6,7 @@
     <title>@ViewBag.Title - My ASP.NET Application</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 </head>
 <body>
@@ -28,6 +29,8 @@
                         <li> @Html.ActionLink("Propuestas", "Index", "Propuestas")</li>
                         <li> @Html.ActionLink("Dashboard", "Dashboard", "Usuario")</li>
                     }
+                   
+                    <li> @Html.ActionLink("FAQ", "FAQ", "Home")</li>
                 </ul>
                 
                 @Html.Partial("_LoginPartial")
@@ -36,10 +39,7 @@
     </div>
     <div class="container body-content">
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
+
     </div>
 
     @Scripts.Render("~/bundles/jquery")
