@@ -10,6 +10,7 @@ using System.Security.Principal;
 using System.Web;
 using System.Web.Mvc;
 using ImageProcessor;
+using ImageProcessor.Imaging;
 using ImageProcessor.Imaging.Formats;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -116,12 +117,13 @@ namespace Shootr.Controllers
                     {
                         using (ImageFactory imageFactory = new ImageFactory(preserveExifData: false))
                         {
-                            Size size = new Size(1000, 1000);
+                            Size size = new Size(1000, 800);
                             ISupportedImageFormat format = new JpegFormat { Quality = 80 };
                             imageFactory.Load(file.InputStream)
-                                        .Constrain(size)
-                                        .BackgroundColor(Color.White)
-                                        .Format(format)
+										//.Constrain(size)
+										.Resize(new ResizeLayer(size, ResizeMode.Pad, AnchorPosition.Center,true))
+										.BackgroundColor(Color.White)
+										.Format(format)
                                         .Save(path);
                         }
                     }

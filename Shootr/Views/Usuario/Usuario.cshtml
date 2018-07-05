@@ -17,7 +17,18 @@
     promedio = 0;
 }
 <h2>
-    @Html.DisplayFor(model => model.UserName) - @Html.DisplayFor(model => model.Rol)
+    @Html.DisplayFor(model => model.UserName) -
+
+    @if (Model.Rol == Shootr.Models.Rol.Fotografo)
+    {
+        @Html.Raw("Fotógrafo");
+    }
+    else
+    {
+        @Html.Raw("Modelo");
+        @*@Html.DisplayFor(model => model.Rol))*@
+    }
+
 
     @if (promedio >= 7)
     {
@@ -49,24 +60,29 @@
         <div class="panel-heading">
             <h2>
                 @Html.DisplayFor(model => model.Nombre) @Html.DisplayFor(model => model.Apellido)
-                @if (Model.Website != string.Empty)
-                {
-                    <a href="https://@Html.DisplayFor(model => model.Website)"> <i class="fa fa-globe"></i></a>
-                }
-                @if (Model.Facebook != string.Empty)
-                {
-                    <a href="https://facebook.com/@Html.DisplayFor(model => model.Facebook)"> <i class="fa fa-facebook"></i></a>
-                }
-                @if (Model.Instagram != string.Empty)
-                {
-                    <a href="https://instagram.com/@Html.DisplayFor(model => model.Instagram)"> <i class="fa fa-instagram"></i></a>
-                }
+               
             </h2>
         </div>
         <div class="panel-body">
             <img class="img-responsive mx-auto d-block" src="@Url.Content("~/ProfilePictures/" + Model.URLFotoPerfil + ".jpg")" alt="Image" />
         </div>
         <div class="panel-body">
+            <h3>
+                <p class="text-center">
+                    @if (Model.Website != string.Empty)
+                    {<a href="https://@Html.DisplayFor(model => model.Website)"> <i class="fa fa-globe"></i></a>
+                    }
+                    @if (Model.Facebook != string.Empty)
+                    {
+                        <a href="https://facebook.com/@Html.DisplayFor(model => model.Facebook)"> <i class="fa fa-facebook"></i></a>
+                    }
+                    @if (Model.Instagram != string.Empty)
+                    {
+                        <a href="https://instagram.com/@Html.DisplayFor(model => model.Instagram)"> <i class="fa fa-instagram"></i></a>
+                    }
+                </p>
+            </h3>
+            </br>
 
 
             @Html.DisplayFor(model => model.Descripcion)
